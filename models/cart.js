@@ -4,12 +4,12 @@ const cartItemSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
-    required: true,
+    required: [true, "Product reference is required"],
   },
   quantity: {
     type: Number,
     default: 1,
-    min: 1,
+    min: [1, "Quantity must be at least 1"],
   },
 });
 
@@ -18,9 +18,16 @@ const cartSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: false,
     },
-    items: [cartItemSchema],
+    items: {
+      type: [cartItemSchema],
+      validate: {
+        validator: function (v) {
+          return v.length > 0; // optional: cart cannot be empty if set
+        },
+        message: "Cart must have at least one item",
+      },
+    },
   },
   { timestamps: true }
 );

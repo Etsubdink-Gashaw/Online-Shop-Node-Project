@@ -1,7 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/dbConfig.js';
-import todoRouter from './routes/todo.js';
 import productRoutes from './routes/product.js';
 import cartRouter from './routes/cart.js';
 import orderRouter from './routes/order.js';
@@ -13,7 +12,6 @@ const app= express();
 const PORT= 5000;
 
 app.use(express.json());
-app.use('/todo', todoRouter);
 app.use("/products", productRoutes);
 app.use('/cart', cartRouter);
 app.use('/orders', orderRouter);
