@@ -14,6 +14,7 @@ export const getCart = async (req, res) => {
   
       res.status(200).json({
         success: true,
+        message: "Cart retrieved successfully",
         data: cart,
       });
   
@@ -60,6 +61,7 @@ export const getCart = async (req, res) => {
   
       res.status(200).json({
         success: true,
+        message: "Product added to cart successfully",
         data: cart,
       });
   
@@ -89,6 +91,7 @@ export const getCart = async (req, res) => {
   
       res.status(200).json({
         success: true,
+        message: "Cart updated successfully",
         data: cart,
       });
   
@@ -120,6 +123,7 @@ export const getCart = async (req, res) => {
   
       res.status(200).json({
         success: true,
+        message: "Product removed from cart successfully",
         data: cart,
       });
   

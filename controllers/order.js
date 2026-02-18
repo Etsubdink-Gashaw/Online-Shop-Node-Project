@@ -1,6 +1,6 @@
 import Order from "../models/order.js";
 import Product from "../models/Product.js";
-import Cart from "../models/cart.js"; // needed to get cart items
+import Cart from "../models/cart.js"; 
 import mongoose from "mongoose";
 
 
@@ -24,7 +24,6 @@ export const createOrder = async (req, res) => {
         });
       }
   
-      // Validate stock
       for (const item of cart.items) {
         if (item.quantity > item.product.stock) {
           return res.status(400).json({
@@ -34,16 +33,16 @@ export const createOrder = async (req, res) => {
         }
       }
   
-      // Prepare order items & update stock
+      
       const orderItems = cart.items.map(item => {
-        // Deduct stock
+     
         item.product.stock -= item.quantity;
-        item.product.save(); // async save, could use Promise.all for optimization
+        item.product.save(); 
   
         return {
           product: item.product._id,
           quantity: item.quantity,
-          price: item.product.price, // snapshot price
+          price: item.product.price,
         };
       });
   
@@ -62,6 +61,7 @@ export const createOrder = async (req, res) => {
   
       res.status(201).json({
         success: true,
+        message: "Order created successfully",
         data: order,
       });
   
@@ -77,6 +77,7 @@ export const createOrder = async (req, res) => {
       const orders = await Order.find().populate("items.product");
       res.status(200).json({
         success: true,
+        message: "Orders retrieved successfully",
         data: orders,
       });
     } catch (error) {
@@ -108,6 +109,7 @@ export const createOrder = async (req, res) => {
   
       res.status(200).json({
         success: true,
+        message: "Order retrieved successfully",
         data: order,
       });
   

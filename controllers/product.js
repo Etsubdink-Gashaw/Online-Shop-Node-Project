@@ -51,6 +51,7 @@ export const createProduct = async (req, res) => {
 
     res.status(201).json({
       success: true,
+      message: "Product created successfully",
       data: product,
     });
   } catch (error) {
@@ -68,8 +69,8 @@ export const updateProduct = async (req, res) => {
       id,
       req.body,
       {
-        new: true,          // return updated document
-        runValidators: true // apply schema validations
+        new: true,          
+        runValidators: true 
       }
     );
 
@@ -82,6 +83,7 @@ export const updateProduct = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      message: "Product updated successfully",
       data: updatedProduct,
     });
 

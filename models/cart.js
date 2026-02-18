@@ -23,9 +23,9 @@ const cartSchema = new mongoose.Schema(
       type: [cartItemSchema],
       validate: {
         validator: function (v) {
-          return v.length > 0; // optional: cart cannot be empty if set
+          return v.length >= 0; 
         },
-        message: "Cart must have at least one item",
+        message: "Cart must have at least zero items",
       },
     },
   },

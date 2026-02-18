@@ -4,6 +4,7 @@ import connectDB from './config/dbConfig.js';
 import productRoutes from './routes/product.js';
 import cartRouter from './routes/cart.js';
 import orderRouter from './routes/order.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use("/products", productRoutes);
 app.use('/cart', cartRouter);
 app.use('/orders', orderRouter);
+app.use(errorHandler);
 
 app.get('/', (req, res) => {
     res.send('Welcome to the Online Shop API');
