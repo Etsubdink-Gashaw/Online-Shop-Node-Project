@@ -4,30 +4,30 @@ import Cart from "../models/cart.js";
 import mongoose from "mongoose";
 
 
-export const createOrder = async (req, res) => {
+export const createOrder = async (req, res, next) => {
     try {
       const { name, email, address } = req.body;
   
       if (!name || !email || !address) {
-        return res.status(400).json({
-          success: false,
-          message: "Customer name, email, and address are required",
-        });
-      }
+        return next({
+          statusCode: 400,
+          message: "Name, email, and address are required to place an order",
+        })
+      } 
   
       const cart = await Cart.findOne().populate("items.product");
   
       if (!cart || cart.items.length === 0) {
-        return res.status(400).json({
-          success: false,
+        return next({
+          statusCode: 400,
           message: "Cart is empty",
         });
       }
   
       for (const item of cart.items) {
         if (item.quantity > item.product.stock) {
-          return res.status(400).json({
-            success: false,
+          return next({
+            statusCode: 400,
             message: `Insufficient stock for ${item.product.name}`,
           });
         }
@@ -66,13 +66,10 @@ export const createOrder = async (req, res) => {
       });
   
     } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message,
-      });
+      next(error);
     }
   };
-  export const getOrders = async (req, res) => {
+  export const getOrders = async (req, res, next) => {
     try {
       const orders = await Order.find().populate("items.product");
       res.status(200).json({
@@ -81,19 +78,16 @@ export const createOrder = async (req, res) => {
         data: orders,
       });
     } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message,
-      });
+      next(error);
     }
   };
-  export const getOrderById = async (req, res) => {
+  export const getOrderById = async (req, res, next) => {
     try {
       const { id } = req.params;
   
       if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({
-          success: false,
+        return next({
+          statusCode: 400,
           message: "Invalid order ID",
         });
       }
@@ -101,8 +95,8 @@ export const createOrder = async (req, res) => {
       const order = await Order.findById(id).populate("items.product");
   
       if (!order) {
-        return res.status(404).json({
-          success: false,
+        return next({
+          statusCode: 404,
           message: "Order not found",
         });
       }
@@ -114,10 +108,7 @@ export const createOrder = async (req, res) => {
       });
   
     } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message,
-      });
+      next(error);
     }
   };
   

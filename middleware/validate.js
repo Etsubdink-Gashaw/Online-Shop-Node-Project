@@ -10,7 +10,7 @@ export const validate = (schema) => (req, res, next) => {
       });
     }
   
-    req.body = value; // sanitized value
+    req.body = value;
     next();
   };
   

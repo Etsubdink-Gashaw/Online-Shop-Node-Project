@@ -1,6 +1,6 @@
 import Product from "../models/Product.js";
 
-export const getAllProducts = async (req, res) => {
+export const getAllProducts = async (req, res,next) => {
   try {
     const { category, minPrice, maxPrice } = req.query;
 
@@ -16,27 +16,29 @@ export const getAllProducts = async (req, res) => {
     const products = await Product.find(filter);
     res.status(200).json({ count: products.length, products });
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch products", error: error.message });
-  }
+    next(error);
+}
 };
-
-export const getProductById = async (req, res) => {
+export const getProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
     const product = await Product.findById(id);
 
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return next({
+        statusCode: 404,
+        message: "Product not found",
+      });
     }
 
     res.status(200).json(product);
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch product", error: error.message });
+    next(error);
   }
 };
 
-export const createProduct = async (req, res) => {
+export const createProduct = async (req, res, next) => {
   try {
     const { name, description, price, stock, category, imageUrl } = req.body;
 
@@ -61,7 +63,7 @@ export const createProduct = async (req, res) => {
     });
   }
 };
-export const updateProduct = async (req, res) => {
+export const updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -88,22 +90,19 @@ export const updateProduct = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-export const deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
 
     const deletedProduct = await Product.findByIdAndDelete(id);
 
     if (!deletedProduct) {
-      return res.status(404).json({
-        success: false,
+      return next({
+        statusCode: 404,
         message: "Product not found",
       });
     }
@@ -114,9 +113,6 @@ export const deleteProduct = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };

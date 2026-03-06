@@ -1,7 +1,7 @@
 import Cart from "../models/cart.js";
 import Product from "../models/Product.js";
 
-export const getCart = async (req, res) => {
+export const getCart = async (req, res, next) => {
     try {
       const cart = await Cart.findOne().populate("items.product");
   
@@ -19,21 +19,18 @@ export const getCart = async (req, res) => {
       });
   
     } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message,
-      });
+      next(error);
     }
   };
   
-  export const addToCart = async (req, res) => {
+  export const addToCart = async (req, res, next) => {
     try {
       const { productId, quantity = 1 } = req.body;
   
       const product = await Product.findById(productId);
       if (!product) {
-        return res.status(404).json({
-          success: false,
+        return next({
+          statusCode: 404,
           message: "Product not found",
         });
       }
@@ -66,13 +63,10 @@ export const getCart = async (req, res) => {
       });
   
     } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message,
-      });
+      next(error);
     }
   };
-  export const updateCart = async (req, res) => {
+  export const updateCart = async (req, res, next) => {
     try {
       const { items } = req.body;
   
@@ -96,21 +90,18 @@ export const getCart = async (req, res) => {
       });
   
     } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message,
-      });
+   next(error);
     }
   };
-  export const removeFromCart = async (req, res) => {
+  export const removeFromCart = async (req, res, next) => {
     try {
       const { productId } = req.params;
   
       const cart = await Cart.findOne();
   
       if (!cart) {
-        return res.status(404).json({
-          success: false,
+        return next({
+          statusCode: 404,
           message: "Cart not found",
         });
       }
@@ -128,10 +119,7 @@ export const getCart = async (req, res) => {
       });
   
     } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message,
-      });
+      next(error);
     }
   };
   
